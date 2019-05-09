@@ -1,4 +1,4 @@
-package site.zhangsun.pathsearch;
+package site.zhangsun.pathsearch.v1;
 
 import java.util.List;
 import java.util.Map;
@@ -63,18 +63,20 @@ public class NodeMap {
             Node header = vector.getHeader();
             // record node chain
             reporter.record(vector);
-            List<Node.Vector> vs = header.getVectors();
-            if (vs.isEmpty()) {
-                // Can not find valid path
-                reporter.clear();
-                continue;
-            }
 
             String name = header.getName();
             if (end.equalsIgnoreCase(name)) {
                 // Find one, add it to reporter
                 reporter.count();
-                continue;
+                return reporter;
+            }
+
+            // TODO 特殊情况会出现死循环，需要重新考虑退出条件， 如果为空表示到了跟节点，不用再递归；如果回到开始节点需要中断
+            List<Node.Vector> vs = header.getVectors();
+            if (vs.isEmpty()) {
+                // Can not find valid path
+                reporter.clear();
+                return reporter;
             }
 
             search(vs, end, reporter);

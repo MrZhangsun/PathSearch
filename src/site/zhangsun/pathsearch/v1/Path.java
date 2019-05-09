@@ -1,4 +1,4 @@
-package site.zhangsun.pathsearch;
+package site.zhangsun.pathsearch.v1;
 
 /**
  * Function:
