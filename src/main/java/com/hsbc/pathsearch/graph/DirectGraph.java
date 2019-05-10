@@ -1,9 +1,186 @@
 package com.hsbc.pathsearch.graph;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Function:
  *
  * @author zhangsunjiankun - 2019/5/10 下午7:53
  */
-public class DirectGraph {
+public class DirectGraph<E> {
+
+    /**
+     * Total count of the points in the map
+     */
+    private int pn;
+
+    /**
+     * Total count of the sides in the map
+     */
+    private int sn;
+
+    /**
+     * Map used to build points relation ship
+     */
+    private Map<E, Sides<E>> maps;
+
+    public DirectGraph() {
+        this.pn = 0;
+        this.sn = 0;
+        maps = new HashMap<E, Sides<E>>(6);
+    }
+
+    /**
+     * Add a point into the map
+     *
+     * @param point point
+     */
+    public void addPoint(E point) {
+        Sides<E> sides = maps.get(point);
+        if (sides != null)
+            throw new IllegalArgumentException("This point: "+ point +" you want to add has been existed");
+        maps.put(point, new Sides<E>());
+        pn++;
+    }
+
+    public void removePoint(E point) {
+        // Remove this point in both in-sides and out-sides
+        Sides<E> sides = maps.get(point);
+
+        // Remove in sides
+        List<Side<E>> inSides = sides.getInSides();
+        Iterator<Side<E>> inSidesIterator = inSides.iterator();
+        while (inSidesIterator.hasNext()) {
+            Side<E> next = inSidesIterator.next();
+            E start = next.getStart();
+            Sides<E> peerSides = maps.get(start);
+            List<Side<E>> peerOutSides = peerSides.getOutSides();
+            // Remove this side from peer out-sides
+            if (peerOutSides.contains(next))
+                peerOutSides.remove(next);
+
+            // Remove this side from current point's in-sides
+            inSidesIterator.remove();
+        }
+
+        // Remove out sides
+        List<Side<E>> outSides = sides.getOutSides();
+        Iterator<Side<E>> outSidesIterator = outSides.iterator();
+        while (outSidesIterator.hasNext()) {
+            Side<E> next = outSidesIterator.next();
+            E end = next.getEnd();
+            Sides<E> peerSides = maps.get(end);
+            List<Side<E>> peerInSides = peerSides.getInSides();
+
+            // Remove the side from peer in-sides
+            if(peerInSides.contains(next))
+                peerInSides.remove(next);
+
+            // Remove the side from current point's out-sides
+            outSidesIterator.remove();
+        }
+
+        // Remove this node
+        maps.remove(point);
+        pn--;
+    }
+
+    /**
+     * Add side between two points
+     *
+     * @param side side
+     */
+    public void addSide(Side<E> side) {
+        E start = side.getStart();
+        E end = side.getEnd();
+        Sides<E> startSides = maps.get(start);
+        Sides<E> endSides = maps.get(end);
+        if (startSides == null)
+            throw new IllegalArgumentException("The start point: "+ start +" doesn't exist in the map");
+
+        if (endSides == null)
+            throw new IllegalArgumentException("The end point: "+ end +" doesn't exist in the map");
+
+        // Before add the side, check the existence of reverse side
+        List<Side<E>> endInSides = endSides.getInSides();
+        if (endInSides.contains(side))
+            throw new IllegalStateException("This side from "+ end + "to " + start + " has been existed");
+
+        // If the side start -> end doesn't exist, then add
+        List<Side<E>> startOutSides = startSides.getOutSides();
+        if (!startOutSides.contains(side)) {
+            startOutSides.add(side);
+            sn++;
+        }
+
+        // maintain the end point's in-Sides
+        endInSides.add(side);
+    }
+
+    public int getPn() {
+        return pn;
+    }
+
+    public int getSn() {
+        return sn;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        maps.forEach((k, v) -> {
+            sb.append(k);
+            sb.append(", ").append(v);
+            sb.append("\r\n");
+        });
+
+        sb.append("total points: ").append(pn).append(", ");
+        sb.append("total sides: ").append(sn);
+        return sb.toString();
+    }
+
+    public Reporter<E> search(E start, E end) {
+        Reporter<E> reporter = new Reporter<>();
+        Sides<E> startSides = maps.get(start);
+        Sides<E> endSides = maps.get(end);
+        if (startSides == null)
+            throw new IllegalArgumentException("Given start point: "+ start +" doesn't exist in the map");
+        if (endSides == null)
+            throw new IllegalArgumentException("Given end point: "+ end +" doesn't exist in the map");
+
+        List<Side<E>> startOutSides = startSides.getOutSides();
+        if (startOutSides.isEmpty())
+            return reporter;
+
+        return search(startOutSides, end, reporter);
+    }
+
+    private Reporter<E> search(List<Side<E>> startOutSides, E aim, Reporter<E> reporter) {
+        startOutSides.forEach(side -> {
+            // avoid loop directional ring
+            if (!reporter.push(side))
+                return;
+
+            // find one path
+            E end = side.getEnd();
+            if (aim.equals(end)) {
+                reporter.record();
+                return;
+            }
+
+            // if meet end point, stack pop
+            Sides<E> sides = maps.get(end);
+            List<Side<E>> outSides = sides.getOutSides();
+            if (outSides.isEmpty()) {
+                reporter.pop();
+                return;
+            }
+
+            search(outSides, aim, reporter);
+        });
+        return reporter;
+    }
 }
