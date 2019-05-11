@@ -48,13 +48,14 @@ public class Reporter<E> {
 
         for (Stack<Side<E>> stack : paths) {
             StringBuilder sb = new StringBuilder();
-            for (int j = 0; j < stack.size(); j++) {
+            final int size = stack.size();
+            for (int j = 0; j < size; j++) {
                 Side<E> side = stack.pop();
                 if (j == 0) {
-                    sb.append(side.getEnd()).append("<--").append(side.getWeight()).append("--").append(side.getStart());
+                    sb.append(side.getStart()).append("--").append(side.getWeight()).append("-->").append(side.getEnd());
                     continue;
                 }
-                sb.append("<--").append(side.getWeight()).append("--").append(side.getStart());
+                sb.append("--").append(side.getWeight()).append("-->").append(side.getEnd());
             }
             ps.add(sb.toString());
         }
