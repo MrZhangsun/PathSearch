@@ -59,11 +59,10 @@ public class DirectGraph<E> {
             Sides<E> peerSides = maps.get(start);
             List<Side<E>> peerOutSides = peerSides.getOutSides();
             // Remove this side from peer out-sides
-            if (peerOutSides.contains(next))
+            if (peerOutSides.contains(next)) {
                 peerOutSides.remove(next);
-
-            // Remove this side from current point's in-sides
-            inSidesIterator.remove();
+                sn--;
+            }
         }
 
         // Remove out sides
@@ -76,11 +75,10 @@ public class DirectGraph<E> {
             List<Side<E>> peerInSides = peerSides.getInSides();
 
             // Remove the side from peer in-sides
-            if(peerInSides.contains(next))
+            if(peerInSides.contains(next)) {
                 peerInSides.remove(next);
-
-            // Remove the side from current point's out-sides
-            outSidesIterator.remove();
+                sn--;
+            }
         }
 
         // Remove this node
