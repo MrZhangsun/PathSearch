@@ -2,14 +2,13 @@ package com.hsbc.pathsearch.graph;
 
 import com.hsbc.pathsearch.stack.LinkedListStack;
 import com.hsbc.pathsearch.stack.Stack;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Function:
+ * Function: Map Search Reporter
  *
  * @author zhangsunjiankun - 2019/5/10 下午9:29
  */
@@ -108,5 +107,13 @@ public class Reporter<E> {
         });
 
         return paths.get(maxKey[0]);
+    }
+
+    @Override
+    public String toString() {
+        return "Reporter{" +
+                "pathStack=" + pathStack +
+                ", paths=" + paths +
+                '}';
     }
 }

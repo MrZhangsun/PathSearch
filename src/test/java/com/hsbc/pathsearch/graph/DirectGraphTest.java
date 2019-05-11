@@ -1,6 +1,5 @@
 package com.hsbc.pathsearch.graph;
 
-import com.hsbc.pathsearch.stack.Stack;
 import org.junit.Assert;
 import org.junit.Test;
 import java.util.List;
@@ -69,9 +68,8 @@ public class DirectGraphTest {
         addSide();
         Reporter<String> reporter = maps.search("A", "D");
         List<String> paths = reporter.getPaths();
-        paths.forEach(path -> {
-            System.out.println(path);
-        });
+        paths.forEach(System.out::println);
+        Assert.assertEquals(paths.size(), 2);
     }
 
     @Test(expected = IllegalArgumentException.class)

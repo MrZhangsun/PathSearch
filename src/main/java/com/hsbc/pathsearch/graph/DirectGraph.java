@@ -98,9 +98,10 @@ public class DirectGraph<E> {
         Sides<E> endSides = maps.get(end);
         if (startSides == null)
             throw new IllegalArgumentException("The start point: "+ start +" doesn't exist in the map");
-
         if (endSides == null)
             throw new IllegalArgumentException("The end point: "+ end +" doesn't exist in the map");
+        if (start.equals(end))
+            throw new IllegalArgumentException("The start point is the same with end point");
 
         // Before add the side, check the existence of reverse side
         List<Side<E>> endInSides = endSides.getInSides();
@@ -180,6 +181,8 @@ public class DirectGraph<E> {
             }
 
             search(outSides, aim, reporter);
+            // after all the sides are searched, pop super side
+            reporter.pop();
         });
         return reporter;
     }
