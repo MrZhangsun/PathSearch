@@ -1,13 +1,10 @@
 package com.hsbc.pathsearch.graph;
 
-import com.hsbc.pathsearch.stack.Stack;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Function: Reporter Test
@@ -17,7 +14,7 @@ import static org.junit.Assert.*;
 public class ReporterTest {
 
     private Reporter<String> reporter = new Reporter<>();
-    private DirectGraph<String> maps = new DirectGraph<>();
+    private DirectedGraph<String> maps = new DirectedGraph<>();
 
     @Before
     public void initMap() {

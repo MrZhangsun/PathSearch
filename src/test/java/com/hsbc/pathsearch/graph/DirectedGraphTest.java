@@ -9,9 +9,9 @@ import java.util.List;
  *
  * @author zhangsunjiankun - 2019/5/10 下午10:06
  */
-public class DirectGraphTest {
+public class DirectedGraphTest {
 
-    private DirectGraph<String> maps = new DirectGraph<>();
+    private DirectedGraph<String> maps = new DirectedGraph<>();
 
     @Test
     public void addPoint() {
@@ -78,5 +78,13 @@ public class DirectGraphTest {
         Reporter<String> reporter = maps.search("A", "A");
         List<String> paths = reporter.getPaths();
         paths.forEach(System.out::println);
+    }
+
+    @Test
+    public void calculateDistance() {
+        addSide();
+        String s = maps.calculateDistance("A", "B", "C");
+        System.out.println(s);
+        Assert.assertEquals(s, "5");
     }
 }

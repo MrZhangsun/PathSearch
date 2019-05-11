@@ -1,16 +1,13 @@
 package com.hsbc.pathsearch.graph;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Function:
  *
  * @author zhangsunjiankun - 2019/5/10 下午7:53
  */
-public class DirectGraph<E> {
+public class DirectedGraph<E> {
 
     /**
      * Total count of the points in the map
@@ -27,7 +24,7 @@ public class DirectGraph<E> {
      */
     private Map<E, Sides<E>> maps;
 
-    public DirectGraph() {
+    public DirectedGraph() {
         this.pn = 0;
         this.sn = 0;
         maps = new HashMap<>(6);
@@ -186,4 +183,34 @@ public class DirectGraph<E> {
         });
         return reporter;
     }
+
+    /**
+     * Calculate route distance
+     *
+     * @param nodes nodes
+     * @return route distance
+     */
+    public String calculateDistance(E ... nodes) {
+        int result = 0;
+        List<Boolean> finds = new ArrayList<>(nodes.length);
+        for (int i = 0; i < nodes.length - 1; i++) {
+            Sides<E> sides = maps.get(nodes[i]);
+            List<Side<E>> outSides = sides.getOutSides();
+            for (Side<E> outSide : outSides) {
+                E end = outSide.getEnd();
+                if (end.equals(nodes[i + 1])) {
+                    finds.add(true);
+                    result += outSide.getWeight();
+                }
+            }
+
+        }
+
+        if (finds.size() != nodes.length - 1)
+            return "NO_SUCH_ROUTE";
+        else
+            return String.valueOf(result);
+    }
+
+
 }
