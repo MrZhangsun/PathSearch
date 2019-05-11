@@ -24,8 +24,11 @@ public class Reporter<E> {
     }
 
     public boolean push(Side<E> side) {
-        if (pathStack.contains(side))
-            return false;
+        for (int i = 0; i < pathStack.size(); i++) {
+            Side<E> pushedSide = pathStack.get(i);
+            if (pushedSide.contains(side.getEnd()))
+                return false;
+        }
 
         pathStack.push(side);
         return true;

@@ -29,6 +29,10 @@ public class Side<E> {
         return this;
     }
 
+    public boolean contains(E e) {
+        return this.start.equals(e) || this.end.equals(e);
+    }
+
     public E getStart() {
         return this.start;
     }

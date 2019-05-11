@@ -46,8 +46,10 @@ public class DirectGraphTest {
         maps.addSide(new Side<>("E", "F", 2));
         maps.addSide(new Side<>("F", "B", 2));
         maps.addSide(new Side<>("F", "A", 1));
+        maps.addSide(new Side<>("F", "D", 1));
+
         System.out.println(maps);
-        Assert.assertEquals(maps.getSn(), 9);
+        Assert.assertEquals(maps.getSn(), 10);
     }
 
     @Test
