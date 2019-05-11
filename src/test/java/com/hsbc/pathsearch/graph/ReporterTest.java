@@ -83,11 +83,15 @@ public class ReporterTest {
 
     @Test
     public void getMinPath() {
-        Stack<Side<String>> minPath = reporter.getMinPath();
+        Reporter<String> result = maps.search("A", "D");
+        String minPath = result.getMinPath();
         System.out.println(minPath);
     }
 
     @Test
     public void getMaxPath() {
+        Reporter<String> result = maps.search("A", "D");
+        String maxPath = result.getMaxPath();
+        System.out.println(maxPath);
     }
 }

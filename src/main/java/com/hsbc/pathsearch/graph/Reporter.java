@@ -49,17 +49,7 @@ public class Reporter<E> {
         List<String> ps = new ArrayList<>(paths.size());
 
         for (Stack<Side<E>> stack : paths) {
-            StringBuilder sb = new StringBuilder();
-            final int size = stack.size();
-            for (int j = 0; j < size; j++) {
-                Side<E> side = stack.pop();
-                if (j == 0) {
-                    sb.append(side.getStart()).append("--").append(side.getWeight()).append("-->").append(side.getEnd());
-                    continue;
-                }
-                sb.append("--").append(side.getWeight()).append("-->").append(side.getEnd());
-            }
-            ps.add(sb.toString());
+            ps.add(printStack(stack));
         }
         return ps;
     }
@@ -81,32 +71,65 @@ public class Reporter<E> {
         return statistics;
     }
 
-    public Stack<Side<E>> getMinPath() {
+    /**
+     * Get the min short path, return the first
+     *
+     * @return path stack
+     */
+    public String getMinPath() {
         Map<Integer, Integer> statistics = statistics();
-        final Integer[] min = {0};
-        final Integer[] minKey = new Integer[1];
-        statistics.forEach((k, v) -> {
-            if (v < min[0]) {
-                minKey[0] = k;
-                min[0] = v;
+        int minKey = 0;
+        int minVal = statistics.get(minKey);
+        for (int i = 1; i < statistics.size(); i++) {
+            int v = statistics.get(i);
+            if (v < minVal) {
+                minKey = i;
+                minVal = v;
             }
-        });
+        }
 
-        return paths.get(minKey[0]);
+        return printStack(paths.get(minKey));
     }
 
-    public Stack<Side<E>> getMaxPath() {
+    /**
+     * Get the max path, if equals, return the first
+     *
+     * @return path stack
+     */
+    public String getMaxPath() {
         Map<Integer, Integer> statistics = statistics();
-        final Integer[] max = {0};
-        final Integer[] maxKey = new Integer[1];
-        statistics.forEach((k, v) -> {
-            if (v > max[0]) {
-                maxKey[0] = k;
-                max[0] = v;
+        int maxKey = 0;
+        int maxVal = statistics.get(maxKey);
+        for (int i = 1; i < statistics.size(); i++) {
+            int v = statistics.get(i);
+            if (v > maxVal) {
+                maxKey = i;
+                maxVal = v;
             }
-        });
+        }
 
-        return paths.get(maxKey[0]);
+        return printStack(paths.get(maxKey));
+    }
+
+    private String printStack(Stack<Side<E>> stack) {
+        StringBuilder sb = new StringBuilder();
+        int totalWeight = 0;
+        final int size = stack.size();
+        sb.append("Path: [");
+        for (int j = 0; j < size; j++) {
+            Side<E> side = stack.pop();
+            totalWeight += side.getWeight();
+            if (j == 0) {
+                sb.append(side.getStart()).append("--").append(side.getWeight()).append("-->").append(side.getEnd());
+                continue;
+            }
+
+            sb.append("--").append(side.getWeight()).append("-->").append(side.getEnd());
+        }
+
+        sb.append("]");
+        sb.append(" Weight: [").append(totalWeight).append("]\r\n");
+        return sb.toString();
     }
 
     @Override
