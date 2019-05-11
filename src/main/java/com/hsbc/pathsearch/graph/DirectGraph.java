@@ -30,7 +30,7 @@ public class DirectGraph<E> {
     public DirectGraph() {
         this.pn = 0;
         this.sn = 0;
-        maps = new HashMap<E, Sides<E>>(6);
+        maps = new HashMap<>(6);
     }
 
     /**
@@ -148,6 +148,8 @@ public class DirectGraph<E> {
             throw new IllegalArgumentException("Given start point: "+ start +" doesn't exist in the map");
         if (endSides == null)
             throw new IllegalArgumentException("Given end point: "+ end +" doesn't exist in the map");
+        if (start.equals(end))
+            throw new IllegalArgumentException("Start point is the same with End point");
 
         List<Side<E>> startOutSides = startSides.getOutSides();
         if (startOutSides.isEmpty())

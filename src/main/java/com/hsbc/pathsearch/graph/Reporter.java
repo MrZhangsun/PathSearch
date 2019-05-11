@@ -40,8 +40,25 @@ public class Reporter<E> {
         pop();
     }
 
-    public List<Stack<Side<E>>> getPaths() {
-        return paths;
+    public List<String> getPaths() {
+        if (paths.isEmpty())
+            return null;
+
+        List<String> ps = new ArrayList<>(paths.size());
+
+        for (Stack<Side<E>> stack : paths) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < stack.size(); j++) {
+                Side<E> side = stack.pop();
+                if (j == 0) {
+                    sb.append(side.getEnd()).append("<--").append(side.getWeight()).append("--").append(side.getStart());
+                    continue;
+                }
+                sb.append("<--").append(side.getWeight()).append("--").append(side.getStart());
+            }
+            ps.add(sb.toString());
+        }
+        return ps;
     }
 
     private Map<Integer, Integer> statistics() {

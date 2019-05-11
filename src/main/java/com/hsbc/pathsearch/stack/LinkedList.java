@@ -1,19 +1,20 @@
 package com.hsbc.pathsearch.stack;
 
 /**
- * Function:
+ * Function: Linked List
  *
  * @author zhangsunjiankun - 2019/5/10 下午7:52
  */
 public class LinkedList<E> {
 
-    private Node<E> head;
-
+    /**
+     * dummy header doesn't store any element
+     */
     private Node<E> dummyHead;
     private int size;
 
     public LinkedList() {
-        dummyHead = new Node<E>(null, head);
+        dummyHead = new Node<>(null, null);
         size = 0;
     }
 
@@ -47,10 +48,11 @@ public class LinkedList<E> {
 
         Node<E> preNode = dummyHead;
         for (int i = 0; i < index; i++) {
+            // head = dummy head.next
             preNode = preNode.next;
         }
 
-        preNode.next = new Node<E>(e, preNode.next);
+        preNode.next = new Node<>(e, preNode.next);
         size++;
     }
 
@@ -168,6 +170,7 @@ public class LinkedList<E> {
             preNode = preNode.next;
 
         Node<E> delNode = preNode.next;
+        preNode.next = delNode.next;
         size--;
         return delNode.e;
     }
@@ -223,7 +226,9 @@ public class LinkedList<E> {
 
         @Override
         public String toString() {
-            return e.toString();
+            if (e == null)
+                return null;
+            return this.e.toString();
         }
     }
 }

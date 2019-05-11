@@ -1,9 +1,9 @@
 package com.hsbc.pathsearch.graph;
 
+import com.hsbc.pathsearch.stack.Stack;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
+import java.util.List;
 
 /**
  * Function:
@@ -64,5 +64,19 @@ public class DirectGraphTest {
 
     @Test
     public void search() {
+        addSide();
+        Reporter<String> reporter = maps.search("A", "D");
+        List<String> paths = reporter.getPaths();
+        paths.forEach(path -> {
+            System.out.println(path);
+        });
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void searchSamePoint() {
+        addSide();
+        Reporter<String> reporter = maps.search("A", "A");
+        List<String> paths = reporter.getPaths();
+        paths.forEach(System.out::println);
     }
 }
