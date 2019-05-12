@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class AnswerTestCases {
 
-    private Reporter<String> reporter = new Reporter<>();
     private DirectedGraph<String> maps = new DirectedGraph<>();
 
     @Before
@@ -131,7 +130,8 @@ public class AnswerTestCases {
         Reporter<String> reporter = maps.search("A", "C");
         String minPath = reporter.getMinPath();
         System.out.println(minPath);
-        Assert.assertEquals("Path: [A--5-->B--4-->C] Weight: [9]\r\n", minPath);
+        String weight = minPath.substring(minPath.lastIndexOf("[") + 1, minPath.lastIndexOf("]"));
+        Assert.assertEquals("9", weight);
     }
 
     /**
@@ -139,9 +139,11 @@ public class AnswerTestCases {
      */
     @Test
     public void question9Test() {
-        Reporter<String> reporter = maps.search("A", "C");
+        Reporter<String> reporter = maps.search("B", "B");
         String minPath = reporter.getMinPath();
         System.out.println(minPath);
+        String weight = minPath.substring(minPath.lastIndexOf("[") + 1, minPath.lastIndexOf("]"));
+        Assert.assertEquals("9", weight);
     }
 
     /**

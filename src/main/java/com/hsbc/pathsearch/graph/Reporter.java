@@ -22,11 +22,19 @@ public class Reporter<E> {
         paths = new ArrayList<>(16);
     }
 
-    public boolean push(Side<E> side) {
+    public boolean push(Side<E> side, E aim) {
         for (int i = 0; i < pathStack.size(); i++) {
             Side<E> pushedSide = pathStack.get(i);
-            if (pushedSide.contains(side.getEnd()))
-                return false;
+            E end = side.getEnd();
+            if (pushedSide.contains(end)) {
+                boolean equals = end.equals(aim);
+                if (equals) {
+                    pathStack.push(side);
+                    curTotalWeights += side.getWeight();
+                }
+                return equals;
+            }
+
         }
 
         pathStack.push(side);
@@ -45,10 +53,11 @@ public class Reporter<E> {
     }
 
     public List<String> getPaths() {
-        if (paths.isEmpty())
-            return null;
-
         List<String> ps = new ArrayList<>(paths.size());
+        if (paths.isEmpty()) {
+            ps.add("NO_SUCH_ROUTE");
+            return ps;
+        }
 
         for (Stack<Side<E>> stack : paths) {
             ps.add(printStack(stack));
@@ -119,7 +128,7 @@ public class Reporter<E> {
         final int size = stack.size();
         sb.append("Path: [");
         for (int j = 0; j < size; j++) {
-            Side<E> side = stack.pop();
+            Side<E> side = stack.get(j);
             totalWeight += side.getWeight();
             if (j == 0) {
                 sb.append(side.getStart()).append("--").append(side.getWeight()).append("-->").append(side.getEnd());

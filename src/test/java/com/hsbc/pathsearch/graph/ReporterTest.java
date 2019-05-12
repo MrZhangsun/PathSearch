@@ -48,11 +48,11 @@ public class ReporterTest {
 
     @Test
     public void push() {
-        reporter.push(new Side<>("A", "B", 3));
-        reporter.push(new Side<>("B", "C", 4));
-        reporter.push(new Side<>("C", "D", 6));
-        reporter.push(new Side<>("D", "A", 12));
-        reporter.push(new Side<>("C", "A", 9));
+        reporter.push(new Side<>("A", "B", 3), "D");
+        reporter.push(new Side<>("B", "C", 4), "D");
+        reporter.push(new Side<>("C", "D", 6), "D");
+        reporter.push(new Side<>("D", "A", 12), "D");
+        reporter.push(new Side<>("C", "A", 9), "D");
         System.out.println(reporter);
         Assert.assertEquals(reporter.pop().getEnd(), "D");
     }
@@ -60,7 +60,7 @@ public class ReporterTest {
     @Test
     public void pop() {
         push();
-        assert reporter.pop().getEnd().equals("C");
+        Assert.assertEquals("C", reporter.pop().getEnd());
     }
 
     @Test

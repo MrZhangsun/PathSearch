@@ -154,8 +154,6 @@ public class DirectedGraph<E> {
             throw new IllegalArgumentException("Given start point: "+ start +" doesn't exist in the map");
         if (endSides == null)
             throw new IllegalArgumentException("Given end point: "+ end +" doesn't exist in the map");
-        if (start.equals(end))
-            throw new IllegalArgumentException("Start point is the same with End point");
 
         List<Side<E>> startOutSides = startSides.getOutSides();
         if (startOutSides.isEmpty())
@@ -175,13 +173,14 @@ public class DirectedGraph<E> {
     private Reporter<E> search(List<Side<E>> startOutSides, E aim, Reporter<E> reporter) {
         startOutSides.forEach(side -> {
             // avoid loop directional ring
-            if (!reporter.push(side))
+            if (!reporter.push(side, aim))
                 return;
 
             // find one path
             E end = side.getEnd();
             if (aim.equals(end)) {
                 reporter.record();
+                reporter.pop();
                 return;
             }
 
