@@ -42,7 +42,6 @@ public class Reporter<E> {
 
     public void record() {
         paths.add(pathStack.copy());
-        //pop();
     }
 
     public List<String> getPaths() {

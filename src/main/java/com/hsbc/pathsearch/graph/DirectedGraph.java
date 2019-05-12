@@ -1,6 +1,7 @@
 package com.hsbc.pathsearch.graph;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Function:
@@ -197,6 +198,36 @@ public class DirectedGraph<E> {
             reporter.pop();
         });
         return reporter;
+    }
+
+    /**
+     * Filter search result to obtain a exact router according the given conditions
+     *
+     * @param start start point
+     * @param end end point
+     * @param limitWeight limit weight
+     * @param limitStops limit stops
+     * @param exact exact flag
+     * @return exact routes
+     */
+    public List<String> search(E start, E end, int limitWeight, int limitStops, boolean exact) {
+        Reporter<E> search = search(start, end, limitWeight, limitStops);
+        List<String> paths = search.getPaths();
+        List<String> des = new ArrayList<>(Arrays.asList(new String[paths.size()]));
+        Collections.copy(des, paths);
+
+        if (exact && !des.isEmpty()) {
+            des = des.stream()
+                    .filter(s -> s.split(">").length - 1 == limitStops)
+                    .filter(s -> {
+                        int h = s.lastIndexOf("[") + 1;
+                        int t = s.lastIndexOf("]");
+                        String weight = s.substring(h, t);
+                        int i = Integer.parseInt(weight);
+                        return limitWeight == -1 || (limitWeight == i);
+                    }).collect(Collectors.toList());
+        }
+        return des;
     }
 
     public Reporter<E> search(E start, E end, int limit, int size) {

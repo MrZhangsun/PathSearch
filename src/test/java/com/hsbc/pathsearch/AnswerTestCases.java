@@ -118,9 +118,9 @@ public class AnswerTestCases {
      */
     @Test
     public void question7Test() {
-        Reporter<String> search = maps.search("A", "C");
-        List<String> paths = search.getPaths();
+        List<String> paths = maps.search("A", "C", -1, 4, true);
         System.out.println(paths);
+        Assert.assertEquals(paths.size(), 3);
     }
 
     /**
