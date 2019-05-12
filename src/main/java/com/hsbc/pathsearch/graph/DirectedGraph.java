@@ -230,7 +230,7 @@ public class DirectedGraph<E> {
         return des;
     }
 
-    public Reporter<E> search(E start, E end, int limit, int size) {
+    public Reporter<E> search(E start, E end, int limitWeight, int limitStops) {
         Reporter<E> reporter = new Reporter<>();
         Sides<E> startSides = maps.get(start);
         Sides<E> endSides = maps.get(end);
@@ -242,7 +242,7 @@ public class DirectedGraph<E> {
         List<Side<E>> startOutSides = startSides.getOutSides();
         if (startOutSides.isEmpty())
             return reporter;
-        return search(startOutSides, end, reporter, limit, size);
+        return search(startOutSides, end, reporter, limitWeight, limitStops);
     }
 
     /**

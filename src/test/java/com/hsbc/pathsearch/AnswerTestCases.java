@@ -127,12 +127,32 @@ public class AnswerTestCases {
      *  8.The length of the shortest route (in terms of distance to travel) from A to C.
      */
     @Test
-    public void test8() {
+    public void question8Test() {
         Reporter<String> reporter = maps.search("A", "C");
         String minPath = reporter.getMinPath();
         System.out.println(minPath);
         Assert.assertEquals("Path: [A--5-->B--4-->C] Weight: [9]\r\n", minPath);
     }
 
+    /**
+     * 9.The length of the shortest route (in terms of distance to travel) from B to B.
+     */
+    @Test
+    public void question9Test() {
+        Reporter<String> reporter = maps.search("A", "C");
+        String minPath = reporter.getMinPath();
+        System.out.println(minPath);
+    }
 
+    /**
+     * 10.The number of different routes from C to C with a distance of less than 30.
+     * In the sample data, the trips are: CDC, CEBC, CEBCDC, CDCEBC, CDEBC, CEBCEBC, CEBCEBCEBC.
+      */
+    @Test
+    public void question10Test() {
+        Reporter<String> search = maps.search("C", "C", 30, -1);
+        List<String> paths = search.getPaths();
+        System.out.println(paths);
+        Assert.assertEquals(paths.size(), 7);
+    }
 }

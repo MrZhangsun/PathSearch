@@ -145,7 +145,7 @@ public class Reporter<E> {
     private int curTotalWeights;
     public boolean push(Side<E> side, int weight, int size) {
         if (weight != -1) {
-            if (weight < (curTotalWeights) + side.getWeight())
+            if (weight <= (curTotalWeights) + side.getWeight())
                 return false;
         }
 
