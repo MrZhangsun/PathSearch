@@ -87,4 +87,12 @@ public class DirectedGraphTest {
         System.out.println(s);
         Assert.assertEquals(s, "5");
     }
+
+    @Test
+    public void detectLoopRings() {
+        addSide();
+        Reporter<String> reporter = maps.detectLoopRings("A");
+        List<String> paths = reporter.getPaths();
+        System.out.println(paths);
+    }
 }

@@ -138,6 +138,13 @@ public class DirectedGraph<E> {
         return sb.toString();
     }
 
+    /**
+     * Search routes from point to point
+     *
+     * @param start start point
+     * @param end end point
+     * @return search report
+     */
     public Reporter<E> search(E start, E end) {
         Reporter<E> reporter = new Reporter<>();
         Sides<E> startSides = maps.get(start);
@@ -156,6 +163,14 @@ public class DirectedGraph<E> {
         return search(startOutSides, end, reporter);
     }
 
+    /**
+     * Search routes from point to point
+     *
+     * @param startOutSides start point's out-sides
+     * @param aim aim point
+     * @param reporter search result
+     * @return search report
+     */
     private Reporter<E> search(List<Side<E>> startOutSides, E aim, Reporter<E> reporter) {
         startOutSides.forEach(side -> {
             // avoid loop directional ring
@@ -178,6 +193,55 @@ public class DirectedGraph<E> {
             }
 
             search(outSides, aim, reporter);
+            // after all the sides are searched, pop super side
+            reporter.pop();
+        });
+        return reporter;
+    }
+
+    public Reporter<E> search(E start, E end, int limit, int size) {
+        Reporter<E> reporter = new Reporter<>();
+        Sides<E> startSides = maps.get(start);
+        Sides<E> endSides = maps.get(end);
+        if (startSides == null)
+            throw new IllegalArgumentException("Given start point: "+ start +" doesn't exist in the map");
+        if (endSides == null)
+            throw new IllegalArgumentException("Given end point: "+ end +" doesn't exist in the map");
+
+        List<Side<E>> startOutSides = startSides.getOutSides();
+        if (startOutSides.isEmpty())
+            return reporter;
+        return search(startOutSides, end, reporter, limit, size);
+    }
+
+    /**
+     * Search routes from point to point
+     *
+     * @param startOutSides start point's out-sides
+     * @param aim aim point
+     * @param reporter search result
+     * @return search report
+     */
+    private Reporter<E> search(List<Side<E>> startOutSides, E aim, Reporter<E> reporter, int limit, int size) {
+        startOutSides.forEach(side -> {
+            if (!reporter.push(side, limit, size))
+                return;
+
+            // find one path
+            E end = side.getEnd();
+            if (aim.equals(end)) {
+                reporter.record();
+            }
+
+            // if meet end point, stack pop
+            Sides<E> sides = maps.get(end);
+            List<Side<E>> outSides = sides.getOutSides();
+            if (outSides.isEmpty()) {
+                reporter.pop();
+                return;
+            }
+
+            search(outSides, aim, reporter, limit, size);
             // after all the sides are searched, pop super side
             reporter.pop();
         });
@@ -210,6 +274,25 @@ public class DirectedGraph<E> {
             return "NO_SUCH_ROUTE";
         else
             return String.valueOf(result);
+    }
+
+    /**
+     * Detect loop rings from given start point
+     *
+     * @param start start point
+     * @return search report
+     */
+    public Reporter<E> detectLoopRings(E start) {
+        Reporter<E> reporter = new Reporter<>();
+        Sides<E> sides = maps.get(start);
+        if (sides == null)
+            throw new IllegalArgumentException("Given start point: "+ start +" doesn't exist in the map");
+
+        List<Side<E>> outSides = sides.getOutSides();
+        if (outSides.isEmpty())
+            return reporter;
+
+        return search(outSides, start, reporter);
     }
 
 

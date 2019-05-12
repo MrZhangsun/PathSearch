@@ -30,16 +30,19 @@ public class Reporter<E> {
         }
 
         pathStack.push(side);
+        curTotalWeights += side.getWeight();
         return true;
     }
 
     public Side pop() {
-        return pathStack.pop();
+        Side<E> side = pathStack.pop();
+        curTotalWeights -= side.getWeight();
+        return side;
     }
 
     public void record() {
         paths.add(pathStack.copy());
-        pop();
+        //pop();
     }
 
     public List<String> getPaths() {
@@ -138,5 +141,22 @@ public class Reporter<E> {
                 "pathStack=" + pathStack +
                 ", paths=" + paths +
                 '}';
+    }
+
+    private int curTotalWeights;
+    public boolean push(Side<E> side, int weight, int size) {
+        if (weight != -1) {
+            if (weight < (curTotalWeights) + side.getWeight())
+                return false;
+        }
+
+        if (size != -1) {
+            if (size < (pathStack.size() + 1))
+                return false;
+        }
+
+        pathStack.push(side);
+        curTotalWeights += side.getWeight();
+        return true;
     }
 }

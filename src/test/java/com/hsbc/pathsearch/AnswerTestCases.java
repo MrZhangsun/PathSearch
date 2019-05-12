@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * Function:
  *
@@ -97,4 +99,40 @@ public class AnswerTestCases {
         System.out.println("The distance of the route A-E-D: " + distance);
         Assert.assertEquals(distance, "NO_SUCH_ROUTE");
     }
+
+    /**
+     * 6.The number of trips starting at C and ending at C with a maximum of 3 stops. In the sample data below,
+     * there are two such trips: C-D-C (2 stops). and C-E-B-C (3 stops).
+     */
+    @Test
+    public void test6() {
+        Reporter<String> search = maps.search("C", "C", -1, 3);
+        List<String> paths = search.getPaths();
+        System.out.println(paths);
+        Assert.assertEquals(2, paths.size());
+    }
+
+    /**
+     * 7.The number of trips starting at A and ending at C with exactly 4 stops. In the sample data below,
+     * there are three such trips: A to C (via B,C,D); A to C (via D,C,D); and A to C (via D,E,B).
+     */
+    @Test
+    public void question7Test() {
+        Reporter<String> search = maps.search("A", "C");
+        List<String> paths = search.getPaths();
+        System.out.println(paths);
+    }
+
+    /**
+     *  8.The length of the shortest route (in terms of distance to travel) from A to C.
+     */
+    @Test
+    public void test8() {
+        Reporter<String> reporter = maps.search("A", "C");
+        String minPath = reporter.getMinPath();
+        System.out.println(minPath);
+        Assert.assertEquals("Path: [A--5-->B--4-->C] Weight: [9]\r\n", minPath);
+    }
+
+
 }
