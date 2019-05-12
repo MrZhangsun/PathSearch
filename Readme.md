@@ -1,3 +1,4 @@
+## Note: I'm using Maven to manage the dependence.
 ### Trains Problem Coding Guide
 #### classes introduction:
 ##### com.hsbc.pathsearch.graph.DirectedGraph 
